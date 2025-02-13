@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { getUser } from '../storage/authStorage';
 
 export default function LoginScreen({ navigation }) {
@@ -8,7 +8,6 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     const user = await getUser();
-
     if (user && user.email === email && user.password === password) {
       alert('Login successful!');
       navigation.navigate('Home');
@@ -19,12 +18,15 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Welcome Back!</Text>
+      <Text style={styles.subtitle}>Login to continue</Text>
+
       <TextInput
         placeholder="Email"
         style={styles.input}
         value={email}
         onChangeText={setEmail}
+        keyboardType="email-address"
       />
       <TextInput
         placeholder="Password"
@@ -33,17 +35,61 @@ export default function LoginScreen({ navigation }) {
         secureTextEntry
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button
-        title="Don't have an account? Sign Up"
-        onPress={() => navigation.navigate('SignUp')}
-      />
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center' },
-  input: { borderWidth: 1, padding: 8, marginBottom: 16, borderRadius: 4 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f7f7f7',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginBottom: 12,
+  },
+  loginButton: {
+    backgroundColor: '#007bff',
+    padding: 14,
+    width: '100%',
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  loginText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  signupText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: '#007bff',
+  },
 });
