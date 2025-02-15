@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { getUser } from '../storage/authStorage';
+import { getAllUsers, setCurrentUser } from '../storage/authStorage';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+
   const handleLogin = async () => {
-    const user = await getUser();
-    if (user && user.email === email && user.password === password) {
+    const allUsers = await getAllUsers();
+    const user = Object.values(allUsers).find(u => u.email === email && u.password === password);
+  
+    if (user) {
+      await setCurrentUser(user.id);
       alert('Login successful!');
       navigation.navigate('Home');
     } else {
@@ -19,10 +23,11 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back!</Text>
-      <Text style={styles.subtitle}>Login to continue</Text>
+      <Text style={styles.subtitle}>Login to Zybit</Text>
 
       <TextInput
         placeholder="Email"
+        placeholderTextColor="#aaa"
         style={styles.input}
         value={email}
         onChangeText={setEmail}
@@ -30,66 +35,31 @@ export default function LoginScreen({ navigation }) {
       />
       <TextInput
         placeholder="Password"
+        placeholderTextColor="#aaa"
         style={styles.input}
         value={password}
         secureTextEntry
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+        <Text style={styles.switchText}>Don't have an account? <Text style={styles.switchTextBold}>Sign Up</Text></Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f7f7f7',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 20,
-  },
-  input: {
-    width: '100%',
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    marginBottom: 12,
-  },
-  loginButton: {
-    backgroundColor: '#007bff',
-    padding: 14,
-    width: '100%',
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  loginText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  signupText: {
-    marginTop: 15,
-    fontSize: 16,
-    color: '#007bff',
-  },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212', padding: 20 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 10 },
+  subtitle: { fontSize: 16, color: '#aaa', marginBottom: 20 },
+  input: { width: '100%', backgroundColor: '#1E1E1E', color: '#fff', padding: 15, borderRadius: 8, marginBottom: 15, fontSize: 16 },
+  button: { backgroundColor: '#D62828', padding: 15, borderRadius: 8, width: '100%', alignItems: 'center' },
+  buttonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  switchText: { color: '#aaa', marginTop: 15, fontSize: 14 },
+  switchTextBold: { color: '#D62828', fontWeight: 'bold' },
 });

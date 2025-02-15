@@ -6,7 +6,7 @@ import AddHabitScreen from '../src/screens/AddHabitScreen';
 import CalendarScreen from '../src/screens/CalenderScreen';
 import LoginScreen from '../src/screens/LoginScreen';
 import SignUpScreen from '../src/screens/SignUpScreen';
-
+import MonthlyReviewScreen from '../src/screens/CalenderScreen';
 const Stack = createStackNavigator();
 
 function Navigation() {
@@ -17,6 +17,7 @@ function Navigation() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="AddHabit" component={AddHabitScreen} />
         <Stack.Screen name="Calendar" component={CalendarScreen} />
+        <Stack.Screen name='MonthlyReview' component={MonthlyReviewScreen} />
       </Stack.Navigator>
   
   );
