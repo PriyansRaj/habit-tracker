@@ -4,8 +4,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { getHabits, saveHabit, logHabitActivity } from '../storage/habitStorage';
 import { getCurrentUser } from '../storage/authStorage';
 
+// Sample habit categories
+const habitCategories = ["Health", "Productivity", "Mindfulness", "Fitness", "Creativity"];
+const habitActions = ["Practice", "Do", "Try", "Engage in", "Spend time on"];
+const habitSubjects = [
+  "a new workout", "breathing exercises", "deep focus sessions", 
+  "a gratitude journal", "a creative writing exercise", "a random act of kindness"
+];
+
 export default function HomeScreen({ navigation }) {
   const [habits, setHabits] = useState([]);
+  const [recommendedHabit, setRecommendedHabit] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,6 +57,21 @@ export default function HomeScreen({ navigation }) {
     await saveHabit(updatedHabits);
   };
 
+  // Generate a unique habit recommendation
+  const generateNewHabit = () => {
+    let newHabit;
+    const userCompletedHabits = habits.map(h => h.name); // Get names of user’s habits
+
+    do {
+      const category = habitCategories[Math.floor(Math.random() * habitCategories.length)];
+      const action = habitActions[Math.floor(Math.random() * habitActions.length)];
+      const subject = habitSubjects[Math.floor(Math.random() * habitSubjects.length)];
+      newHabit = `${action} ${subject} for better ${category}`;
+    } while (userCompletedHabits.includes(newHabit)); // Ensure it's unique
+
+    setRecommendedHabit(newHabit);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Habits</Text>
@@ -67,6 +91,22 @@ export default function HomeScreen({ navigation }) {
         <Ionicons name="calendar-outline" size={24} color="#fff" />
         <Text style={styles.reviewButtonText}>Monthly Review</Text>
       </TouchableOpacity>
+
+      {/* Recommend Button */}
+      <TouchableOpacity 
+        style={styles.recommendButton} 
+        onPress={generateNewHabit}
+      >
+        <Ionicons name="sparkles-outline" size={24} color="#fff" />
+        <Text style={styles.recommendButtonText}>Recommend Habit</Text>
+      </TouchableOpacity>
+
+      {/* Display Recommended Habit */}
+      {recommendedHabit ? (
+        <View style={styles.recommendationContainer}>
+          <Text style={styles.recommendationText}>{recommendedHabit}</Text>
+        </View>
+      ) : null}
 
       {habits.length === 0 ? (
         <Text style={styles.noHabitsText}>No habits yet. Start tracking now!</Text>
@@ -113,6 +153,10 @@ const styles = StyleSheet.create({
   addButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginLeft: 8 },
   reviewButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1E90FF', padding: 12, borderRadius: 8, justifyContent: 'center', marginBottom: 20 },
   reviewButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginLeft: 8 },
+  recommendButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#28A745', padding: 12, borderRadius: 8, justifyContent: 'center', marginBottom: 20 },
+  recommendButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginLeft: 8 },
+  recommendationContainer: { padding: 15, backgroundColor: '#1E1E1E', borderRadius: 8, marginBottom: 10, alignItems: 'center' },
+  recommendationText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
   noHabitsText: { color: '#aaa', fontSize: 16, textAlign: 'center', marginTop: 20 },
   habitItem: { backgroundColor: '#1E1E1E', padding: 15, borderRadius: 10, marginBottom: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   habitName: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
