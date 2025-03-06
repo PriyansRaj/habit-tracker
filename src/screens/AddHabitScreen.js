@@ -25,7 +25,6 @@ export default function AddHabitScreen({ route, navigation }) {
     setDays((prevDays) => ({ ...prevDays, [day]: !prevDays[day] }));
   };
 
-
   const showPicker = () => {
     setShowTimePicker(true);
     setSelectedTime(new Date());
@@ -75,7 +74,14 @@ export default function AddHabitScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Create a New Habit</Text>
+      
+      {/* 🔹 Header with Back Button */}
+      <View style={styles.headerContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Home")}>
+          <Ionicons name="arrow-back" size={30} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Create a New Habit</Text>
+      </View>
 
       {/* Habit Name */}
       <View style={styles.inputContainer}>
@@ -159,17 +165,39 @@ export default function AddHabitScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, backgroundColor: '#121212', padding: 20, alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 20 },
+
+  /* 🔹 Header Container */
+  headerContainer: {  
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    width: '100%', 
+    marginBottom: 20 
+  },
+
+  backButton: { 
+    position: 'relative',  // ✅ Change from absolute to relative
+    marginRight: 10 
+  },
+
+  title: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    color: '#fff', 
+    flex: 1,  // ✅ Allow the title to take available space
+    textAlign: 'center' 
+  },
+
   inputContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1E1E1E', padding: 15, borderRadius: 10, marginBottom: 15, width: '100%' },
   input: { flex: 1, color: '#fff', marginLeft: 10, fontSize: 16 },
   timePickerButton: { flex: 1, marginLeft: 10 },
   timePickerText: { color: '#aaa', fontSize: 16 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', marginTop: 20, marginBottom: 10 },
   daysContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10 },
-  dayButton: { padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#D62828', width: 50, alignItems: 'center' },
+  dayButton: { padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#D62828', width: 60, alignItems: 'center' },
   dayButtonSelected: { backgroundColor: '#D62828' },
   dayText: { color: '#D62828', fontWeight: 'bold' },
   dayTextSelected: { color: '#fff' },
   saveButton: { backgroundColor: '#D62828', padding: 15, borderRadius: 8, width: '100%', alignItems: 'center', marginTop: 20 },
   saveButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
 });
+

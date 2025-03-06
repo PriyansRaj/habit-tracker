@@ -1,32 +1,44 @@
-import React from 'react';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from '../src/screens/HomeScreen';
-import AddHabitScreen from '../src/screens/AddHabitScreen';
-import CalendarScreen from '../src/screens/CalenderScreen';
-import LoginScreen from '../src/screens/LoginScreen';
-import SignUpScreen from '../src/screens/SignUpScreen';
-import MonthlyReviewScreen from '../src/screens/CalenderScreen';
-import HabitAnalyticsScreen from '../src/screens/HabitAnalyticsScreen';
-
-
-
+import HomeScreen from "../src/screens/HomeScreen";
+import AddHabitScreen from "../src/screens/AddHabitScreen";
+import CalendarScreen from "../src/screens/CalenderScreen";
+import LoginScreen from "../src/screens/LoginScreen";
+import SignUpScreen from "../src/screens/SignUpScreen";
+import MonthlyReviewScreen from "../src/screens/CalenderScreen";
+import HabitAnalyticsScreen from "../src/screens/HabitAnalyticsScreen";
+import PendingHabitsScreen from "../src/screens/PendingHabitsScreen";
+import CompletedHabitsScreen from "../src/screens/CompletedHabitsScreen";
+import VisualizationScreen from "../src/screens/VisualizationScreen"
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
-function Navigation() {
+
+// ✅ Create Drawer Navigator (for the main menu)
+function DrawerNavigator() {
   return (
-   
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="AddHabit" component={AddHabitScreen} />
-        <Stack.Screen name="Calendar" component={CalendarScreen} />
-        <Stack.Screen name='MonthlyReview' component={MonthlyReviewScreen} />
-        <Stack.Screen name="HabitAnalytics" component={HabitAnalyticsScreen} />
-      </Stack.Navigator>
-    
-  
+    <Drawer.Navigator screenOptions={{ headerShown: false }}>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Add Habit" component={AddHabitScreen} />
+      <Drawer.Screen name="Monthly Review" component={MonthlyReviewScreen} />
+      <Drawer.Screen name="Completed" component={CompletedHabitsScreen} />
+      <Drawer.Screen name="Pending" component={PendingHabitsScreen} />
+      <Drawer.Screen name="Analytics" component={HabitAnalyticsScreen} />
+     
+    </Drawer.Navigator>
   );
 }
-export default Navigation;
+
+// ✅ Create Main Stack Navigator (includes Auth + Drawer)
+export default function Navigation() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="Main" component={DrawerNavigator} />
+      <Stack.Screen name="VisualizationScreen" component={VisualizationScreen} />
+    </Stack.Navigator>
+  );
+}

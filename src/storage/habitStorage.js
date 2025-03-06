@@ -6,20 +6,39 @@ const HISTORY_KEY = 'habit_history';
 /** Get all habits */
 export const getHabits = async () => {
   try {
-    const jsonValue = await AsyncStorage.getItem(HABIT_KEY);
-    return jsonValue ? JSON.parse(jsonValue) : [];
-  } catch (e) {
-    console.error('Error getting habits:', e);
+    const storedData = await AsyncStorage.getItem('habits');
+    if (!storedData) return [];
+
+    const { habits, lastUpdated } = JSON.parse(storedData);
+    
+    const today = new Date().toDateString(); // Get today's date
+    const lastUpdateDate = lastUpdated ? new Date(lastUpdated).toDateString() : null;
+
+    // If a new day has started, reset completedToday for all habits
+    if (today !== lastUpdateDate) {
+      const resetHabits = habits.map(habit => ({ ...habit, completedToday: false }));
+      await saveHabit(resetHabits); // Save updated habits
+      return resetHabits;
+    }
+
+    return habits;
+  } catch (error) {
+    console.error('Error retrieving habits:', error);
     return [];
   }
 };
 
+
 /** Save all habits */
 export const saveHabit = async (habits) => {
   try {
-    await AsyncStorage.setItem(HABIT_KEY, JSON.stringify(habits));
-  } catch (e) {
-    console.error('Error saving habits:', e);
+    const data = {
+      habits,
+      lastUpdated: new Date().toISOString(), // Save current date
+    };
+    await AsyncStorage.setItem('habits', JSON.stringify(data));
+  } catch (error) {
+    console.error('Error saving habits:', error);
   }
 };
 

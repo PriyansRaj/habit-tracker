@@ -10,7 +10,7 @@ function App() {
             </NavigationContainer>
         </NavigationIndependentTree>
       
-    );
+    );  
 }
 
 export default App;
